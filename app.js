@@ -84,4 +84,5 @@ function setup(){
 function refreshList(){
     app.getItems();
     console.log('reload');
+    setTimeout(refreshList, 60000);
 }
