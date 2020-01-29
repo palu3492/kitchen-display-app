@@ -67,7 +67,7 @@ function setup(){
             },
             displayMode: function(){
                 this.deleteToggle = !this.deleteToggle;
-                $('body').css("font-size", "2em");
+                $('body').css("font-size", "3em");
                 $('#options').hide();
                 $('#app').css("max-width", "100vw");
                 $('#app').css("min-width", "100vw");
