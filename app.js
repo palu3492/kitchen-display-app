@@ -22,7 +22,7 @@ function setup(){
         },
         computed: {
             server: function(){
-                if(this.production){
+                if(!this.production){
                     return 'http://localhost:5000/items'
                 }
                 return 'https://list-display-app.herokuapp.com/items'
