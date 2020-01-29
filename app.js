@@ -5,10 +5,10 @@ window.onload = setup;
 function setup(){
 
     Vue.component('list-item', {
-        props: ['title', 'id'],
-        template: `<span class="d-flex justify-content-between mb-2 item">
+        props: ['title', 'id', 'deletetoggle'],
+        template: `<span class="d-flex justify-content-between item px-3">
                         <p>{{ title }}</p>
-                        <button type="button" v-on:click="$emit('delete-item', id)">❌</button>
+                        <button type="button" v-if="deletetoggle" v-on:click="$emit('delete-item', id)">❌</button>
                     </span>`
     });
 
@@ -20,7 +20,8 @@ function setup(){
                 {id: 1, title: 'Meat and Seafood'}
             ],
             itemInput: "",
-            production: true
+            production: true,
+            deleteToggle: true
         },
         computed: {
             server: function(){
@@ -63,6 +64,11 @@ function setup(){
                         _this.getItems();
                     }
                 });
+            },
+            displayMode: function(){
+                this.deleteToggle = !this.deleteToggle;
+                $('body').css("font-size", "2em");
+                $('#options').hide();
             }
         },
         created: function() {
@@ -70,10 +76,10 @@ function setup(){
         }
     });
 
-    setTimeout(reload, 60000);
+    setTimeout(refreshList, 60000);
 }
 
-function reload(){
-    location.reload();
+function refreshList(){
+    app.getItems();
     console.log('reload');
 }

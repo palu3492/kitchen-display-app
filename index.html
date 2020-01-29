@@ -10,15 +10,18 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="app" class="container">
-            <header class="mb-3">
-                <h1 class="py-2">Grocery List</h1>
+        <div id="app" class="container p-0">
+            <header>
+                <h1 class="p-3 pl-3">Grocery List</h1>
             </header>
-
-            <list-item v-for="item in items" v-bind:key="item.id" v-bind:id="item.id" v-bind:title="item.title" v-on:delete-item="deleteItem($event)"></list-item>
-
-            <input type="text" v-model="itemInput"/>
-            <button type="button" v-on:click="addItem">Add item</button>
+            <div>
+                <list-item v-for="item in items" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id" v-bind:id="item.id" v-bind:title="item.title" v-on:delete-item="deleteItem($event)"></list-item>
+            </div>
+            <div class="px-3 my-3" id="options">
+                <input type="text" v-model="itemInput"/>
+                <button type="button" v-on:click="addItem">Add item</button>
+                <button type="button" v-on:click="displayMode">Display Mode</button>
+            </div>
         </div>
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

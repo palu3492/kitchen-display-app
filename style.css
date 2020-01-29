@@ -1,4 +1,7 @@
 
+*{
+    overflow: auto;
+}
 body{
     background: #e9eaee;
 }
@@ -8,18 +11,24 @@ body{
     overflow: auto;
     min-height: 100vh;
 }
+#options{
 
+}
+.item{
+    border-bottom: solid 0.2em black;
+}
 .item:hover{
-    background: #fafafa;
+    background: #b4b4b4;
 }
 
 header{
-    border-bottom: solid 5px #000;
+    background: black;
+    color: white;
 }
 h1{
     font-size: 2.5em;
 }
 p{
-    font-size: 1.5em;
+    font-size: 2em;
     margin: 0;
 }
