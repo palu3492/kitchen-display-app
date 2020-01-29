@@ -70,7 +70,7 @@ function respondWithError(res){
     res.end();
 }
 
-app.put("/new-item", (req, res) => {
+app.put("/items", (req, res) => {
     let title = req.body.title;
     try {
         db.run("INSERT INTO items (title) VALUES (?)", [title]);
@@ -85,7 +85,7 @@ app.put("/new-item", (req, res) => {
     res.end();
 });
 
-app.delete("/delete-item", (req, res) => {
+app.delete("/items", (req, res) => {
     let title = req.body.id;
     try {
         db.run("UPDATE items SET active = false WHERE id = (?)", [id]);

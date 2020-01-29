@@ -18,14 +18,14 @@ function setup(){
                 {id: 1, title: 'Meat and Seafood'}
             ],
             itemInput: "",
-            server: 'http://localhost:5000'
+            server: 'https://list-display-app.herokuapp.com/items'
         },
         methods: {
             addItem: function(){
                 let title = this.itemInput;
                 let _this = this;
                 $.ajax({
-                    url: _this.server+'/new-item',
+                    url: _this.server,
                     type: 'PUT',
                     data: {title: title},
                     success: result => {
@@ -36,7 +36,7 @@ function setup(){
             getItems: function(){
                 let _this = this;
                 // Fetch array of list items from API
-                $.getJSON(_this.server+'/items', data => {
+                $.getJSON(_this.server, data => {
                     _this.items = data;
                     console.log(_this.items);
                 });
@@ -44,7 +44,7 @@ function setup(){
             deleteItem: function(id){
                 let _this = this;
                 $.ajax({
-                    url: _this.server+'/delete-item',
+                    url: _this.server,
                     type: 'DELETE',
                     data: {id: id},
                     success: result => {
