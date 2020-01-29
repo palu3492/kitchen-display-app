@@ -21,6 +21,13 @@ function setup(){
             server: 'https://list-display-app.herokuapp.com/items'
         },
         methods: {
+            getItems: function(){
+                let _this = this;
+                // Fetch array of list items from API
+                $.getJSON(_this.server, data => {
+                    _this.items = data;
+                });
+            },
             addItem: function(){
                 let title = this.itemInput;
                 let _this = this;
@@ -29,16 +36,9 @@ function setup(){
                     type: 'PUT',
                     data: {title: title},
                     success: result => {
+                        console.log(result);
                         _this.getItems();
                     }
-                });
-            },
-            getItems: function(){
-                let _this = this;
-                // Fetch array of list items from API
-                $.getJSON(_this.server, data => {
-                    _this.items = data;
-                    console.log(_this.items);
                 });
             },
             deleteItem: function(id){
@@ -48,6 +48,7 @@ function setup(){
                     type: 'DELETE',
                     data: {id: id},
                     success: result => {
+                        console.log(result);
                         _this.getItems();
                     }
                 });
