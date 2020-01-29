@@ -5,9 +5,11 @@ window.onload = setup;
 function setup(){
 
     Vue.component('list-item', {
-        props: ['title'],
-        template: '<span class="d-flex justify-content-between mb-4 item"><p>{{ title }}</p></span>'
-        // <button type="button" @click="deleteItem">❌</button>
+        props: ['title', 'id'],
+        template: `<span class="d-flex justify-content-between mb-2 item">
+                        <p>{{ title }}</p>
+                        <button type="button" v-on:click="$emit('delete-item', id)">❌</button>
+                    </span>`
     });
 
     app = new Vue({
@@ -38,6 +40,7 @@ function setup(){
             },
             addItem: function(){
                 let title = this.itemInput;
+                this.itemInput = "";
                 let _this = this;
                 $.ajax({
                     url: _this.server,
@@ -66,5 +69,11 @@ function setup(){
             this.getItems();
         }
     });
+
+    setTimeout(reload, 60000);
 }
 
+function reload(){
+    location.reload();
+    console.log('reload');
+}

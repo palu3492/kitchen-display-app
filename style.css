@@ -14,9 +14,11 @@ body{
 }
 
 header{
-    border-bottom: solid #eaeaec;
+    border-bottom: solid 5px #000;
 }
-
+h1{
+    font-size: 2.5em;
+}
 p{
     font-size: 1.5em;
     margin: 0;

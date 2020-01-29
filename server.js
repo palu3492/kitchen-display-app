@@ -86,9 +86,9 @@ app.put("/items", (req, res) => {
 });
 
 app.delete("/items", (req, res) => {
-    let title = req.body.id;
+    let id = req.body.id;
     try {
-        db.run("UPDATE items SET active = false WHERE id = (?)", [id]);
+        db.run("UPDATE items SET active = 0 WHERE id = (?)", [id]);
         res.writeHead(200);
         res.write('item deleted from db');
         console.log('deleted item');
