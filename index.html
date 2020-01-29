@@ -15,7 +15,7 @@
                 <h1 class="py-2">Grocery List</h1>
             </header>
 
-            <list-item v-for="item in items" v-bind:key="item:id" v-bind:title="item.title"></list-item>
+            <list-item v-for="item in items" v-bind:key="item.id" v-bind:title="item.title"></list-item>
 
             <input type="text" v-model="itemInput"/>
             <button type="button" @click="addItem">Add item</button>
@@ -23,7 +23,7 @@
         <!--scripts-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+        <script src="https://vuejs.org/js/vue.js"></script>
         <script src="app.js"></script>
     </body>
 </html>

@@ -1,0 +1,6 @@
+{
+  "name": "Kitchen Display App",
+  "description": "App that displays items from a database",
+  "repository": "https://github.com/palu3492/kitchen-display-app",
+  "keywords": ["node", "express", "heroku"]
+}

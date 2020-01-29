@@ -27,17 +27,19 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, err => {
     }
 });
 
-app.get('/', (req, res) => {
+app.all('/', (req, res) => {
     respondWithData(res, 'text/plain', 'App online')
 });
 
 app.get('/items', (req, res) => {
-    let sqlQuery = 'SELECT * FROM items';
+    let sqlQuery = 'SELECT * FROM items WHERE active = TRUE';
     queryDatabase(sqlQuery)
     .then(rows => {
         respondWithData(res, 'application/json', JSON.stringify(rows));
+        console.log('serving items');
     }).catch(err => {
         respondWithError(res);
+        console.log('error serving items');
     });
 });
 
@@ -86,7 +88,7 @@ app.put("/new-item", (req, res) => {
 app.delete("/delete-item", (req, res) => {
     let title = req.body.id;
     try {
-        db.run("DELETE FROM items WHERE id = (?)", [id]);
+        db.run("UPDATE items SET active = false WHERE id = (?)", [id]);
         res.writeHead(200);
         res.write('item deleted from db');
         console.log('deleted item');
