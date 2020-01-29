@@ -15,6 +15,7 @@ function setup(){
     app = new Vue({
         el: '#app',
         data: {
+            itemCount: 0,
             items: [
                 {id: 0, title: 'Bakery and Bread'},
                 {id: 1, title: 'Meat and Seafood'}
@@ -37,6 +38,10 @@ function setup(){
                 // Fetch array of list items from API
                 $.getJSON(_this.server, data => {
                     _this.items = data;
+                    if(_this.itemCount > 0 && _this.itemCount < data.length){
+                        playSound();
+                    }
+                    _this.itemCount = data.length;
                 });
             },
             addItem: function(){
@@ -85,4 +90,8 @@ function refreshList(){
     app.getItems();
     console.log('reload');
     setTimeout(refreshList, 60000);
+}
+
+function playSound(){
+    $('audio')[0].play();
 }
