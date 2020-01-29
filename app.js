@@ -18,7 +18,15 @@ function setup(){
                 {id: 1, title: 'Meat and Seafood'}
             ],
             itemInput: "",
-            server: 'https://list-display-app.herokuapp.com/items'
+            production: true
+        },
+        computed: {
+            server: function(){
+                if(this.production){
+                    return 'http://localhost:5000/items'
+                }
+                return 'https://list-display-app.herokuapp.com/items'
+            }
         },
         methods: {
             getItems: function(){
