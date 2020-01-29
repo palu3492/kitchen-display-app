@@ -1,0 +1,13 @@
+{
+  "name": "grocery-items",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "easyxml": "^2.0.1",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.0"
+  }
+}

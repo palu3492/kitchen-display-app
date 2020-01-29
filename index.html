@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Grocery list</title>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="app" class="container">
+            <header class="mb-3">
+                <h1 class="py-2">Grocery List</h1>
+            </header>
+
+            <list-item v-for="item in items" v-bind:key="item:id" v-bind:title="item.title"></list-item>
+
+            <input type="text" v-model="itemInput"/>
+            <button type="button" @click="addItem">Add item</button>
+        </div>
+        <!--scripts-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

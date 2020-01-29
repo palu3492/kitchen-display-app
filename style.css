@@ -1,0 +1,23 @@
+
+body{
+    background: #e9eaee;
+}
+
+#app{
+    background: #fff;
+    overflow: auto;
+    min-height: 100vh;
+}
+
+.item:hover{
+    background: #fafafa;
+}
+
+header{
+    border-bottom: solid #eaeaec;
+}
+
+p{
+    font-size: 1.5em;
+    margin: 0;
+}
