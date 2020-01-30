@@ -6,7 +6,7 @@ function setup(){
 
     Vue.component('list-item', {
         props: ['title', 'id', 'deletetoggle', 'color'],
-        template: `<span class="d-flex justify-content-between item px-3">
+        template: `<span class="d-flex justify-content-between item pl-3">
                         <p>{{ title }}</p>
                         <div class="d-flex">
                             <button type="button" class="delete-button" v-if="deletetoggle" v-on:click="$emit('delete-item', id)">❌</button>
