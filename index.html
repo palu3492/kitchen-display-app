@@ -15,11 +15,20 @@
                 <h1 class="p-3 pl-3">Grocery List</h1>
             </header>
             <div>
-                <list-item v-for="item in items" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id" v-bind:id="item.id" v-bind:title="item.title" v-on:delete-item="deleteItem($event)"></list-item>
+                <list-item v-for="item in items" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id"
+                           v-bind:id="item.id" v-bind:title="item.title" v-bind:color="item.color"
+                           v-on:delete-item="deleteItem($event)">
+                </list-item>
             </div>
             <div class="px-3 my-3" id="options">
                 <input type="text" v-model="itemInput"/>
                 <button type="button" v-on:click="addItem">Add item</button>
+                <select v-model="colorSelected">
+                    <option></option>
+                    <option style="background:red" value="red">Alex</option>
+                    <option style="background:blue" value="blue">Aaron</option>
+                    <option style="background:green" value="green">Tony</option>
+                </select>
                 <button type="button" v-on:click="displayMode">Display Mode</button>
             </div>
             <audio src="insight.mp3"></audio>

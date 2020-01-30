@@ -72,8 +72,9 @@ function respondWithError(res){
 
 app.put("/items", (req, res) => {
     let title = req.body.title;
+    let color = req.body.color;
     try {
-        db.run("INSERT INTO items (title, active) VALUES (?, ?)", [title, true]);
+        db.run("INSERT INTO items (title, active, color) VALUES (?, ?, ?)", [title, true, color]);
         res.writeHead(200);
         res.write('item added to db');
         console.log('added new item');

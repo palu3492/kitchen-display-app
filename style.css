@@ -11,16 +11,31 @@ body{
     overflow: auto;
     min-height: 100vh;
 }
-#options{
 
-}
 .item{
     border-bottom: solid 0.2em black;
+    position: relative;
 }
 .item:hover{
     background: #b4b4b4;
 }
-
+.item:hover button{
+    display: initial;
+}
+.color{
+    height: 100%;
+    width: 2em;
+    /*position: absolute;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    opacity: 0.8;
+}
+.delete-button{
+    margin: 0;
+    border: none;
+    background: none;
+    display: none;
+}
 header{
     background: black;
     color: white;
@@ -31,4 +46,8 @@ h1{
 p{
     font-size: 2em;
     margin: 0;
+}
+option{
+    color: white;
+    font-weight: 500;
 }

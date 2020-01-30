@@ -5,10 +5,13 @@ window.onload = setup;
 function setup(){
 
     Vue.component('list-item', {
-        props: ['title', 'id', 'deletetoggle'],
+        props: ['title', 'id', 'deletetoggle', 'color'],
         template: `<span class="d-flex justify-content-between item px-3">
                         <p>{{ title }}</p>
-                        <button type="button" v-if="deletetoggle" v-on:click="$emit('delete-item', id)">❌</button>
+                        <div class="d-flex">
+                            <button type="button" class="delete-button" v-if="deletetoggle" v-on:click="$emit('delete-item', id)">❌</button>
+                            <div class="color ml-2" :style="'background-color: '+color"></div>
+                        </div>
                     </span>`
     });
 
@@ -17,12 +20,13 @@ function setup(){
         data: {
             itemCount: 0,
             items: [
-                {id: 0, title: 'Bakery and Bread'},
-                {id: 1, title: 'Meat and Seafood'}
+                {id: 10, title: 'Lime sparkling water', color: 'red'},
+                {id: 11, title: 'Cream cheese', color: 'green'}
             ],
             itemInput: "",
             production: true,
-            deleteToggle: true
+            deleteToggle: true,
+            colorSelected: ''
         },
         computed: {
             server: function(){
@@ -38,6 +42,7 @@ function setup(){
                 // Fetch array of list items from API
                 $.getJSON(_this.server, data => {
                     _this.items = data;
+                    console.log('received items');
                     if(_this.itemCount > 0 && _this.itemCount < data.length){
                         playSound();
                     }
@@ -46,17 +51,20 @@ function setup(){
             },
             addItem: function(){
                 let title = this.itemInput;
-                this.itemInput = "";
-                let _this = this;
-                $.ajax({
-                    url: _this.server,
-                    type: 'PUT',
-                    data: {title: title},
-                    success: result => {
-                        console.log(result);
-                        _this.getItems();
-                    }
-                });
+                if(title.length > 1){
+                    let color = this.colorSelected;
+                    this.itemInput = "";
+                    let _this = this;
+                    $.ajax({
+                        url: _this.server,
+                        type: 'PUT',
+                        data: {title: title, color: color},
+                        success: result => {
+                            console.log(result);
+                            _this.getItems();
+                        }
+                    });
+                }
             },
             deleteItem: function(id){
                 let _this = this;
@@ -88,7 +96,6 @@ function setup(){
 
 function refreshList(){
     app.getItems();
-    console.log('reload');
     setTimeout(refreshList, 60000);
 }
 
