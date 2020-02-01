@@ -39,6 +39,8 @@ body{
 header{
     background: black;
     color: white;
+    align-items: center;
+    justify-content: space-between;
 }
 h1{
     font-size: 2.5em;

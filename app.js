@@ -18,13 +18,12 @@ function setup(){
     app = new Vue({
         el: '#app',
         data: {
-            itemCount: 0,
             items: [
                 {id: 10, title: 'Lime sparkling water', color: 'red'},
                 {id: 11, title: 'Cream cheese', color: 'green'}
             ],
             itemInput: "",
-            production: true,
+            production: false,
             deleteToggle: true,
             colorSelected: ''
         },
@@ -37,17 +36,34 @@ function setup(){
             }
         },
         methods: {
-            getItems: function(){
+            webSocketSetup: function(){
+                let ws = new WebSocket('ws://localhost:5000/items');
+
+                ws.onopen = function (event) {
+                    ws.send("Give me items please.");
+                };
+
                 let _this = this;
-                // Fetch array of list items from API
-                $.getJSON(_this.server, data => {
-                    _this.items = data;
-                    console.log('received items');
-                    if(_this.itemCount > 0 && _this.itemCount < data.length){
-                        playSound();
-                    }
-                    _this.itemCount = data.length;
-                });
+                ws.onmessage = (event) => {
+                    _this.items = JSON.parse(event.data);
+                };
+
+                // ws.onopen = function (event) {
+                //     // exampleSocket.send("Here's some text that the server is urgently awaiting!");
+                //     console.log('open');
+                // };
+
+
+                // let _this = this;
+                // // Fetch array of list items from API
+                // $.getJSON(_this.server, data => {
+                //     let count = _this.items.length;
+                //     _this.items = data;
+                //     console.log('received items');
+                //     if(count > 0 && count < data.length){
+                //         playSound();
+                //     }
+                // });
             },
             addItem: function(){
                 let title = this.itemInput;
@@ -61,7 +77,7 @@ function setup(){
                         data: {title: title, color: color},
                         success: result => {
                             console.log(result);
-                            _this.getItems();
+                            // _this.getItems();
                         }
                     });
                 }
@@ -74,7 +90,7 @@ function setup(){
                     data: {id: id},
                     success: result => {
                         console.log(result);
-                        _this.getItems();
+                        // _this.getItems();
                     }
                 });
             },
@@ -87,17 +103,18 @@ function setup(){
             }
         },
         created: function() {
-            this.getItems();
+            // this.getItems();
+            this.webSocketSetup();
         }
     });
 
-    setTimeout(refreshList, 60000);
+    // setTimeout(refreshList, 60000);
 }
 
-function refreshList(){
-    app.getItems();
-    setTimeout(refreshList, 60000);
-}
+// function refreshList(){
+//     app.getItems();
+//     setTimeout(refreshList, 60000);
+// }
 
 function playSound(){
     $('audio')[0].play();
