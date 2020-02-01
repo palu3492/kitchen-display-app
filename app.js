@@ -23,7 +23,7 @@ function setup(){
                 {id: 11, title: 'Cream cheese', color: 'green'}
             ],
             itemInput: "",
-            production: false,
+            production: true,
             deleteToggle: true,
             colorSelected: ''
         },
