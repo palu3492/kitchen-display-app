@@ -27,7 +27,8 @@ function setup(){
             deleteToggle: true,
             colorSelected: '',
             ws: undefined,
-            audio: $('audio')[0]
+            audio: $('audio')[0],
+            pingFrequency: 20000
         },
         computed: {
             server: function(){
@@ -51,14 +52,17 @@ function setup(){
                     console.log('WebSocket connection established')
                 };
 
+                this.ws.onclose = function (event) {
+                    console.log('WebSocket connection closed')
+                };
+
                 let _this = this;
                 this.ws.onmessage = (event) => {
                     _this.items = JSON.parse(event.data);
-                    this.audio.muted = false;
-                    this.audio.play();
+                    // this.audio.play();
                 };
 
-                setTimeout(this.pingServer, 60000);
+                setTimeout(this.pingServer, this.pingFrequency);
 
                 // ws.onopen = function (event) {
                 //     // exampleSocket.send("Here's some text that the server is urgently awaiting!");
@@ -125,7 +129,7 @@ function setup(){
             pingServer: function(){
                 this.ws.send('ping');
                 console.log('ping');
-                setTimeout(this.pingServer, 60000);
+                setTimeout(this.pingServer, this.pingFrequency);
             }
         },
         created: function() {
