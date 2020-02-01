@@ -23,7 +23,7 @@ function setup(){
                 {id: 11, title: 'Cream cheese', color: 'green'}
             ],
             itemInput: "",
-            production: false,
+            production: true,
             deleteToggle: true,
             colorSelected: ''
         },
@@ -37,7 +37,7 @@ function setup(){
         },
         methods: {
             webSocketSetup: function(){
-                let ws = new WebSocket('ws://localhost:5000/items');
+                let ws = new WebSocket('ws://list-display-app.herokuapp.com/items');
 
                 ws.onopen = function (event) {
                     ws.send("Give me items please.");
