@@ -37,7 +37,7 @@ function setup(){
         },
         methods: {
             webSocketSetup: function(){
-                let ws = new WebSocket('ws://list-display-app.herokuapp.com/items');
+                let ws = new WebSocket('wss://list-display-app.herokuapp.com/items');
 
                 ws.onopen = function (event) {
                     ws.send("Give me items please.");

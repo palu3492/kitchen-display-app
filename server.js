@@ -100,11 +100,11 @@ function queryDatabase(sqlQuery){
     });
 }
 
-// function respondWithData(res, contentType, response){
-//     res.writeHead(200, {'Content-Type': contentType});
-//     res.write(response);
-//     res.end();
-// }
+function respondWithData(res, contentType, response){
+    res.writeHead(200, {'Content-Type': contentType});
+    res.write(response);
+    res.end();
+}
 //
 // function respondWithError(res){
 //     res.writeHead(500, {'Content-Type': 'text/plain'});
