@@ -46,16 +46,17 @@ app.all('/', (req, res) => {
 // });
 
 app.ws('/items', (ws, req) => {
-    ws.on('message', function(msg) {
-        if(msg === 'Give me items please.'){
-            getItemsFromDatabase()
-                .then(rows => {
-                    ws.send(JSON.stringify(rows));
-                    console.log('new connection');
-                }).catch(err => {
-                    console.log(err);
-                });
-        }
+    console.log('new connection');
+    getItemsFromDatabase()
+        .then(rows => {
+            ws.send(JSON.stringify(rows));
+            console.log('serving items');
+        }).catch(err => {
+        console.log(err);
+    });
+
+    ws.on('close', function() {
+        console.log('Client disconnected');
     });
 });
 

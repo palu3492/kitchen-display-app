@@ -23,7 +23,7 @@ function setup(){
                 {id: 11, title: 'Cream cheese', color: 'green'}
             ],
             itemInput: "",
-            production: true,
+            production: false,
             deleteToggle: true,
             colorSelected: ''
         },
@@ -33,14 +33,20 @@ function setup(){
                     return 'http://localhost:5000/items'
                 }
                 return 'https://list-display-app.herokuapp.com/items'
+            },
+            wsServer: function(){
+                if(!this.production){
+                    return 'ws://localhost:5000/items'
+                }
+                return 'wss://list-display-app.herokuapp.com/items'
             }
         },
         methods: {
             webSocketSetup: function(){
-                let ws = new WebSocket('wss://list-display-app.herokuapp.com/items');
+                let ws = new WebSocket(this.wsServer);
 
                 ws.onopen = function (event) {
-                    ws.send("Give me items please.");
+                    console.log('WebSocket connection established')
                 };
 
                 let _this = this;
@@ -68,13 +74,14 @@ function setup(){
             addItem: function(){
                 let title = this.itemInput;
                 if(title.length > 1){
-                    let color = this.colorSelected;
+                    let data = {title: title, color: this.colorSelected};
+                    this.items.push(data); // locally add
                     this.itemInput = "";
                     let _this = this;
                     $.ajax({
                         url: _this.server,
                         type: 'PUT',
-                        data: {title: title, color: color},
+                        data: data,
                         success: result => {
                             console.log(result);
                             // _this.getItems();
@@ -84,6 +91,7 @@ function setup(){
             },
             deleteItem: function(id){
                 let _this = this;
+                this.deactivateItem(id); // locally delete
                 $.ajax({
                     url: _this.server,
                     type: 'DELETE',
@@ -92,6 +100,13 @@ function setup(){
                         console.log(result);
                         // _this.getItems();
                     }
+                });
+            },
+            deactivateItem: function(id){
+                this.items.forEach(item => {
+                   if(item.id === id){
+                       item.active = 0;
+                   }
                 });
             },
             displayMode: function(){

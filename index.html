@@ -16,7 +16,7 @@
                 <p class="p-3">{{ items.length }} items</p>
             </header>
             <div>
-                <list-item v-for="item in items" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id"
+                <list-item v-for="item in items" v-if="item.active" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id"
                            v-bind:id="item.id" v-bind:title="item.title" v-bind:color="item.color"
                            v-on:delete-item="deleteItem($event)">
                 </list-item>
