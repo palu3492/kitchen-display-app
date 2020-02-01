@@ -25,7 +25,9 @@ function setup(){
             itemInput: "",
             production: true,
             deleteToggle: true,
-            colorSelected: ''
+            colorSelected: '',
+            ws: undefined,
+            audio: $('audio')[0]
         },
         computed: {
             server: function(){
@@ -43,16 +45,20 @@ function setup(){
         },
         methods: {
             webSocketSetup: function(){
-                let ws = new WebSocket(this.wsServer);
+                this.ws = new WebSocket(this.wsServer);
 
-                ws.onopen = function (event) {
+                this.ws.onopen = function (event) {
                     console.log('WebSocket connection established')
                 };
 
                 let _this = this;
-                ws.onmessage = (event) => {
+                this.ws.onmessage = (event) => {
                     _this.items = JSON.parse(event.data);
+                    this.audio.muted = false;
+                    this.audio.play();
                 };
+
+                setTimeout(this.pingServer, 60000);
 
                 // ws.onopen = function (event) {
                 //     // exampleSocket.send("Here's some text that the server is urgently awaiting!");
@@ -115,6 +121,11 @@ function setup(){
                 $('#options').hide();
                 $('#app').css("max-width", "100vw");
                 $('#app').css("min-width", "100vw");
+            },
+            pingServer: function(){
+                this.ws.send('ping');
+                console.log('ping');
+                setTimeout(this.pingServer, 60000);
             }
         },
         created: function() {
@@ -122,15 +133,4 @@ function setup(){
             this.webSocketSetup();
         }
     });
-
-    // setTimeout(refreshList, 60000);
-}
-
-// function refreshList(){
-//     app.getItems();
-//     setTimeout(refreshList, 60000);
-// }
-
-function playSound(){
-    $('audio')[0].play();
 }

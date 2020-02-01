@@ -55,6 +55,12 @@ app.ws('/items', (ws, req) => {
         console.log(err);
     });
 
+    ws.on('message', function(msg) {
+        if(msg === 'ping'){
+            console.log('ping')
+        }
+    });
+
     ws.on('close', function() {
         console.log('Client disconnected');
     });
