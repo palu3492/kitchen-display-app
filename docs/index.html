@@ -13,7 +13,7 @@
         <div id="app" class="container p-0">
             <header class="d-flex">
                 <h1 class="p-3 pl-3">Grocery List</h1>
-                <p class="p-3">{{ items.length }} items</p>
+                <p class="p-3 items-count">{{ items.length }} items</p>
             </header>
             <div>
                 <list-item v-for="item in items" v-if="item.active" v-bind:deletetoggle="deleteToggle" v-bind:key="item.id"

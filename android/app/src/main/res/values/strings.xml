@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Grocery List</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <declare-styleable name="GlobalAttrDeclare">
+        <attr name="item_id" format="integer" />
+    </declare-styleable>
 </resources>

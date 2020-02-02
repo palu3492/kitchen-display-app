@@ -36,6 +36,9 @@ body{
     background: none;
     display: none;
 }
+.items-count{
+    font-size: 1.6em;
+}
 header{
     background: black;
     color: white;

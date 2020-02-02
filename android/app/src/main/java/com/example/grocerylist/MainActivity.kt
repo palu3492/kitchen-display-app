@@ -23,6 +23,12 @@ class MainActivity : AppCompatActivity() {
 //        recyclerView_main.adapter = MainAdapter()
 
         fetchJson()
+
+        addNewItemButton()
+
+        recyclerView_main.setOnClickListener { v ->
+            println(v)
+        }
     }
 
     fun fetchJson(){
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView_main.adapter = adapter
 
         val wsListener = MyWebSocketListener(adapter, this)
-        val ws = client.newWebSocket(request, wsListener)
+        client.newWebSocket(request, wsListener)
 
 //        client.newCall(request).enqueue(object: Callback {
 //            override fun onResponse(call: Call, response: Response) {
@@ -58,13 +64,38 @@ class MainActivity : AppCompatActivity() {
 //        })
 
     }
+
+    fun addNewItemButton(){
+        button_add_item.setOnClickListener{
+            val newItemTitle = editText_new_item.text.toString()
+            if(newItemTitle.count() > 1) {
+                println("Adding item: "+newItemTitle)
+                editText_new_item.setText("")
+                val url = "https://list-display-app.herokuapp.com/items"
+                val formEncoded = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
+                val string = "title=" + newItemTitle + "&color="
+                println(string)
+                val body = RequestBody.create(formEncoded, string)
+                val request = Request.Builder().url(url).put(body).build()
+                val client = OkHttpClient()
+                client.newCall(request).enqueue(object: Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        println("response")
+                    }
+                    override fun onFailure(call: Call, e: IOException) {
+                        println("Failed to execute request")
+                    }
+                })
+            }
+        }
+    }
+
 }
 
 class MyWebSocketListener(val adapter: MainAdapter, val mainActivity: MainActivity): WebSocketListener(){
 //    val mainAdapter = adapter
     override fun onOpen(webSocket: WebSocket, response: Response) {
         println("connected")
-
     }
 
     val gson = GsonBuilder().create()
@@ -74,7 +105,7 @@ class MyWebSocketListener(val adapter: MainAdapter, val mainActivity: MainActivi
 //        println(text)
         val items = gson.fromJson(text, Array<Item>::class.java).toList()
         val groceryListFeed = GroceryListFeed(items)
-        println(groceryListFeed)
+//        println(groceryListFeed)
 //        println("--")
 //        val groceryListFeed = Gson().fromJson(text, GroceryListFeed::class.java)
 
@@ -106,5 +137,3 @@ class MyWebSocketListener(val adapter: MainAdapter, val mainActivity: MainActivi
 data class GroceryListFeed(val items: List<Item>)
 
 data class Item(val id: Int = 0, val title: String = "", val active: Int = 0, val color: String = "")
-
-//data class Article(val title: String = "", val body: String = "", val viewCount: Int = 0, val payWall: Boolean = false, val titleImage: String = "")
