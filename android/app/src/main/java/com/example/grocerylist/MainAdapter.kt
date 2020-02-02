@@ -61,15 +61,6 @@ class MainAdapter(var groceryListFeed: GroceryListFeed): RecyclerView.Adapter<Cu
                     break
                 }
             }
-//            for((index, _item) in items.withIndex()){
-//                if(_item.id == id){
-//
-//                    groceryListFeed = GroceryListFeed(items)
-//                    setFeed(groceryListFeed)
-////                    this.notifyDataSetChanged()
-//                }
-//            }
-//            this.notifyDataSetChanged()
 
             // update server
             println("Deleting item")

@@ -29,7 +29,6 @@ function setup(){
             ws: undefined,
             audio: $('audio')[0],
             pingFrequency: 20000,
-            justCrashed: false,
             errorCount: 0
         },
         computed: {
@@ -52,24 +51,22 @@ function setup(){
                 let _this = this;
                 this.ws.onopen = function (event) {
                     console.log('WebSocket connection established');
-                    if(_this.justCrashed){
-                        console.log("okay, we're good. thank god or whomever")
-                        _this.justCrashed = false; // I love logic
-                    }
                 };
 
                 this.ws.onclose = function (event) {
                     _this.errorCount++;
                     if(_this.errorCount < 10){
                         console.log('WebSocket connection closed');
-                        console.log("that ain't good. hmmm... let me think");
-                        console.log('attempting to establish connection');
-                        _this.justCrashed = true;
+                        console.log('Attempting to establish connection');
                         _this.webSocketSetup();
                     }else{
-                        console.log("");
-                        console.log("alright this is crazy, i give up")
+                        console.log("Failed to connect to server")
                     }
+                };
+
+                this.ws.onerror = (e) => {
+                    console.log("WebSocket error:");
+                    console.log(e)
                 };
 
                 this.ws.onmessage = (event) => {
@@ -78,23 +75,6 @@ function setup(){
                 };
 
                 setTimeout(this.pingServer, this.pingFrequency);
-
-                // ws.onopen = function (event) {
-                //     // exampleSocket.send("Here's some text that the server is urgently awaiting!");
-                //     console.log('open');
-                // };
-
-
-                // let _this = this;
-                // // Fetch array of list items from API
-                // $.getJSON(_this.server, data => {
-                //     let count = _this.items.length;
-                //     _this.items = data;
-                //     console.log('received items');
-                //     if(count > 0 && count < data.length){
-                //         playSound();
-                //     }
-                // });
             },
             addItem: function(){
                 let title = this.itemInput;
@@ -143,13 +123,12 @@ function setup(){
                 $('#app').css("min-width", "100vw");
             },
             pingServer: function(){
+                // Check is WebSocket is connected
                 if(this.ws.readyState === 1){
                     this.ws.send('ping');
                     console.log('ping');
-                    setTimeout(this.pingServer, this.pingFrequency);
-                }else{
-                    console.log("i wanted to ping but connection is closed, help!")
                 }
+                setTimeout(this.pingServer, this.pingFrequency);
             }
         },
         created: function() {

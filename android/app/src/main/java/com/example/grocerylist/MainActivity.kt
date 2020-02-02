@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.TextView
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
@@ -21,9 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getSupportActionBar()?.hide(); //<< this
         setContentView(R.layout.activity_main)
-
-//        recyclerView_main.setBackgroundColor(Color.BLUE)
 
         recyclerView_main.layoutManager = LinearLayoutManager(this)
 //        recyclerView_main.adapter = MainAdapter()
@@ -33,7 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         setUpWebSocket(adapter)
 
-        SetupNewItemButton(adapter)
+        setupNewItemButton(adapter)
+
+        setUpSpinner()
+
     }
 
     fun setUpWebSocket(adapter: MainAdapter){
@@ -58,7 +60,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun SetupNewItemButton(adapter: MainAdapter){
+    var color = ""
+
+    fun setupNewItemButton(adapter: MainAdapter){
         button_add_item.setOnClickListener{
             val newItemTitle = editText_new_item.text.toString()
             if(newItemTitle.count() > 1) {
@@ -66,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 editText_new_item.setText("")
                 // update locally
                 var items = groceryListFeed.items
-                items.add(Item(1, newItemTitle, 1, ""))
+                items.add(Item(1, newItemTitle, 1, color))
                 groceryListFeed = GroceryListFeed(items)
                 adapter.setFeed(groceryListFeed)
                 adapter.notifyDataSetChanged()
@@ -74,8 +78,7 @@ class MainActivity : AppCompatActivity() {
                 // update on server
                 val url = "https://list-display-app.herokuapp.com/items"
                 val formEncoded = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
-                val string = "title=" + newItemTitle + "&color="
-                println(string)
+                val string = "title=" + newItemTitle + "&color="+color
                 val body = RequestBody.create(formEncoded, string)
                 val request = Request.Builder().url(url).put(body).build()
                 val client = OkHttpClient()
@@ -88,6 +91,42 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
             }
+        }
+    }
+
+    fun setUpSpinner(){
+        val spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.names, android.R.layout.simple_spinner_item)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_names.adapter = spinnerAdapter
+        spinner_names.onItemSelectedListener = object: AdapterView.OnItemClickListener,
+            AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, p3: Long) {
+                val name = parent?.getItemAtPosition(position).toString()
+                if(name == "Alex"){
+                    color = "red"
+                } else if(name == "Aaron"){
+                    color = "blue"
+                } else if(name == "Tony"){
+                    color = "green"
+                }
+                color = when(name) {
+                    "Alex" -> "red"
+                    "Aaron" -> "blue"
+                    "Tony" -> "green"
+                    else -> ""
+                }
+                println(color)
+            }
+
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+
+            }
+
         }
     }
 
