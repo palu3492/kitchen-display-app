@@ -28,7 +28,9 @@ function setup(){
             colorSelected: '',
             ws: undefined,
             audio: $('audio')[0],
-            pingFrequency: 20000
+            pingFrequency: 20000,
+            justCrashed: false,
+            errorCount: 0
         },
         computed: {
             server: function(){
@@ -47,16 +49,29 @@ function setup(){
         methods: {
             webSocketSetup: function(){
                 this.ws = new WebSocket(this.wsServer);
-
+                let _this = this;
                 this.ws.onopen = function (event) {
-                    console.log('WebSocket connection established')
+                    console.log('WebSocket connection established');
+                    if(_this.justCrashed){
+                        console.log("okay, we're good. thank god or whomever")
+                        _this.justCrashed = false; // I love logic
+                    }
                 };
 
                 this.ws.onclose = function (event) {
-                    console.log('WebSocket connection closed')
+                    _this.errorCount++;
+                    if(_this.errorCount < 10){
+                        console.log('WebSocket connection closed');
+                        console.log("that ain't good. hmmm... let me think");
+                        console.log('attempting to establish connection');
+                        _this.justCrashed = true;
+                        _this.webSocketSetup();
+                    }else{
+                        console.log("");
+                        console.log("alright this is crazy, i give up")
+                    }
                 };
 
-                let _this = this;
                 this.ws.onmessage = (event) => {
                     _this.items = JSON.parse(event.data);
                     // this.audio.play();
@@ -119,6 +134,7 @@ function setup(){
                    }
                 });
             },
+            // for displaying on kitchen screen (vertical orientation)
             displayMode: function(){
                 this.deleteToggle = !this.deleteToggle;
                 $('body').css("font-size", "3em");
@@ -127,9 +143,13 @@ function setup(){
                 $('#app').css("min-width", "100vw");
             },
             pingServer: function(){
-                this.ws.send('ping');
-                console.log('ping');
-                setTimeout(this.pingServer, this.pingFrequency);
+                if(this.ws.readyState === 1){
+                    this.ws.send('ping');
+                    console.log('ping');
+                    setTimeout(this.pingServer, this.pingFrequency);
+                }else{
+                    console.log("i wanted to ping but connection is closed, help!")
+                }
             }
         },
         created: function() {

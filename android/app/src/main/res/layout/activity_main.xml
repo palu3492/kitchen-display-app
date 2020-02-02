@@ -44,8 +44,8 @@
             android:id="@+id/button_add_item"
             android:layout_width="87dp"
             android:layout_height="31dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:background="#FFFFFF"
             android:text="Add Item"
             android:textColor="#000000"
@@ -55,15 +55,16 @@
 
         <EditText
             android:id="@+id/editText_new_item"
-            android:layout_width="211dp"
+            android:layout_width="wrap_content"
             android:layout_height="29dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:background="#FFFFFF"
             android:ems="10"
             android:hint="Item name"
             android:inputType="textPersonName"
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_add_item"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
