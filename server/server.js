@@ -57,7 +57,7 @@ app.ws('/items', (ws, req) => {
 
     ws.on('message', function(msg) {
         if(msg === 'ping'){
-            console.log('ping')
+            console.log('ping: '+ msg)
         }
     });
 

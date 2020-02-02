@@ -2,6 +2,8 @@ package com.example.grocerylist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +12,10 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
+
+// feed
+val emptyList = mutableListOf<Item>()
+var groceryListFeed = GroceryListFeed(emptyList)
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,16 +28,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView_main.layoutManager = LinearLayoutManager(this)
 //        recyclerView_main.adapter = MainAdapter()
 
-        fetchJson()
+        val adapter = MainAdapter(groceryListFeed)
+        recyclerView_main.adapter = adapter
 
-        addNewItemButton()
+        setUpWebSocket(adapter)
 
-        recyclerView_main.setOnClickListener { v ->
-            println(v)
-        }
+        SetupNewItemButton(adapter)
     }
 
-    fun fetchJson(){
+    fun setUpWebSocket(adapter: MainAdapter){
         println("Fetching JSON")
 
         val url = "wss://list-display-app.herokuapp.com/items"
@@ -39,38 +44,34 @@ class MainActivity : AppCompatActivity() {
         val request = Request.Builder().url(url).build()
         val client = OkHttpClient()
 
-        // feed
-        val emptyList = listOf<Item>()
-        val feed = GroceryListFeed(emptyList)
-
-        val adapter = MainAdapter(feed)
-        recyclerView_main.adapter = adapter
-
         val wsListener = MyWebSocketListener(adapter, this)
-        client.newWebSocket(request, wsListener)
+        val ws = client.newWebSocket(request, wsListener)
 
-//        client.newCall(request).enqueue(object: Callback {
-//            override fun onResponse(call: Call, response: Response) {
-//                val body = response.body()?.string()
-//                val gson = GsonBuilder().create()
-//                val homeFeed = gson.fromJson(body, GroceryListFeed::class.java)
-//                runOnUiThread {
-//                    recyclerView_main.adapter = MainAdapter(homeFeed)
-//                }
-//            }
-//            override fun onFailure(call: Call, e: IOException) {
-//                println("Failed to execute request")
-//            }
-//        })
-
+        // ping server every 20 seconds
+        val mainHandler = Handler(Looper.getMainLooper())
+        mainHandler.post(object : Runnable {
+            override fun run() {
+                ws.send("ping")
+                println("ping")
+                mainHandler.postDelayed(this, 20000)
+            }
+        })
     }
 
-    fun addNewItemButton(){
+    fun SetupNewItemButton(adapter: MainAdapter){
         button_add_item.setOnClickListener{
             val newItemTitle = editText_new_item.text.toString()
             if(newItemTitle.count() > 1) {
                 println("Adding item: "+newItemTitle)
                 editText_new_item.setText("")
+                // update locally
+                var items = groceryListFeed.items
+                items.add(Item(1, newItemTitle, 1, ""))
+                groceryListFeed = GroceryListFeed(items)
+                adapter.setFeed(groceryListFeed)
+                adapter.notifyDataSetChanged()
+
+                // update on server
                 val url = "https://list-display-app.herokuapp.com/items"
                 val formEncoded = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
                 val string = "title=" + newItemTitle + "&color="
@@ -103,8 +104,8 @@ class MyWebSocketListener(val adapter: MainAdapter, val mainActivity: MainActivi
     override fun onMessage(webSocket: WebSocket, text: String) {
 
 //        println(text)
-        val items = gson.fromJson(text, Array<Item>::class.java).toList()
-        val groceryListFeed = GroceryListFeed(items)
+        val items = gson.fromJson(text, Array<Item>::class.java).toMutableList()
+        groceryListFeed = GroceryListFeed(items)
 //        println(groceryListFeed)
 //        println("--")
 //        val groceryListFeed = Gson().fromJson(text, GroceryListFeed::class.java)
@@ -134,6 +135,6 @@ class MyWebSocketListener(val adapter: MainAdapter, val mainActivity: MainActivi
     }
 }
 
-data class GroceryListFeed(val items: List<Item>)
+data class GroceryListFeed(val items: MutableList<Item>)
 
 data class Item(val id: Int = 0, val title: String = "", val active: Int = 0, val color: String = "")

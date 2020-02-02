@@ -13,8 +13,7 @@ import java.io.IOException
 
 //class MainAdapter(val groceryListFeed: GroceryListFeed): RecyclerView.Adapter<CustomViewHolder>() {
 class MainAdapter(var groceryListFeed: GroceryListFeed): RecyclerView.Adapter<CustomViewHolder>() {
-// val groceryListFeed: GroceryListFeed
-//    val videoTitles = listOf("first", "second", "third")
+
     val buttonIds = HashMap<Button, Int>()
 
     fun setFeed(feed: GroceryListFeed){
@@ -24,7 +23,6 @@ class MainAdapter(var groceryListFeed: GroceryListFeed): RecyclerView.Adapter<Cu
 
     override fun getItemCount(): Int {
         return groceryListFeed.items.count()
-//        return 1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
@@ -34,9 +32,7 @@ class MainAdapter(var groceryListFeed: GroceryListFeed): RecyclerView.Adapter<Cu
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-//        println("here2")
-//        println(groceryListFeed)
-//        holder.view.textView_item_title.setText(groceryListJson)
+
         val item = groceryListFeed.items[position]
         if (item.title != "") {
             holder.view.textView_item_title.setText(item.title)
@@ -49,19 +45,46 @@ class MainAdapter(var groceryListFeed: GroceryListFeed): RecyclerView.Adapter<Cu
         buttonIds[button] = item.id
 
         button.setOnClickListener {v ->
+
+            val id = buttonIds[v]
+
+            // update locally
+            var items = groceryListFeed.items
+            for(i in 0..items.size-1){
+                val _item = items.get(i);
+                println(_item.id)
+                if(_item.id == id){
+                    items.removeAt(i)
+                    groceryListFeed = GroceryListFeed(items)
+                    this.setFeed(groceryListFeed)
+                    this.notifyDataSetChanged()
+                    break
+                }
+            }
+//            for((index, _item) in items.withIndex()){
+//                if(_item.id == id){
+//
+//                    groceryListFeed = GroceryListFeed(items)
+//                    setFeed(groceryListFeed)
+////                    this.notifyDataSetChanged()
+//                }
+//            }
+//            this.notifyDataSetChanged()
+
+            // update server
             println("Deleting item")
             val url = "https://list-display-app.herokuapp.com/items"
             val formEncoded = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
-            val string = "id=" + buttonIds[v]
+            val string = "id=" + id.toString()
             val body = RequestBody.create(formEncoded, string)
             val request = Request.Builder().url(url).delete(body).build()
             val client = OkHttpClient()
             client.newCall(request).enqueue(object: Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    println("response")
+                    println("delete response")
                 }
                 override fun onFailure(call: Call, e: IOException) {
-                    println("Failed to execute request")
+                    println("Failed to execute delete request")
                 }
             })
         }
