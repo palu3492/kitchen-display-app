@@ -3,7 +3,10 @@ node_modules/
 # android
 .gradle/
 /gradle/
-/build
+/build/generated
+/build/intermediates
+/build/kotlin
+/build/tmp
 *.iml
 .gradle
 /local.properties
