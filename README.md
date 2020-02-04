@@ -17,6 +17,6 @@ https://palu3492.github.io/kitchen-display-app/
 
 Android:
 
-[APK here](android/app/build/outputs/apk/debug/app-debug.apk)
+[APK here](android/app/build/outputs/apk/debug/app-debug.apk) (debug version)
 
 ![Android app screenshot](screenshots/sc3.png)
