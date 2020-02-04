@@ -8,4 +8,5 @@
         <item>Aaron</item>
         <item>Tony</item>
     </string-array>
+    <string name="title_activity_test_add_item">TestAddItem</string>
 </resources>
