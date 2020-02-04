@@ -61,11 +61,13 @@ function setup(){
                         _this.webSocketSetup();
                     }else{
                         console.log("Failed to connect to server")
+                        alert("WebSocket crashed!");
                     }
                 };
 
                 this.ws.onerror = (e) => {
                     console.log("WebSocket error:");
+                    alert("WebSocket error");
                     console.log(e)
                 };
 
